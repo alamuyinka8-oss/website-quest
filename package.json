@@ -1,0 +1,12 @@
+{
+  "name": "website-quest",
+  "version": "1.0.0",
+  "description": "A browser game where you can load any website and run through it.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
