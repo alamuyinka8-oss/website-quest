@@ -1,419 +1,358 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const siteStatus = document.getElementById('siteStatus');
-const scoreValue = document.getElementById('score');
-const bestScoreValue = document.getElementById('bestScore');
-const speedValue = document.getElementById('speedValue');
-const siteUrlInput = document.getElementById('siteUrl');
-const websiteFrame = document.getElementById('websiteFrame');
-const siteOverlay = document.getElementById('siteOverlay');
-const siteOverlayText = document.getElementById('siteOverlayText');
-const loadSiteBtn = document.getElementById('loadSiteBtn');
-const startBtn = document.getElementById('startBtn');
+const games = [
+  {
+    id: 'bubble-pop',
+    name: 'Bubble Pop World',
+    age: 5,
+    type: 'Kids',
+    accent: '#4ea5ff',
+    description: 'Pop the floating bubbles and make bright colors sparkle.',
+    website: `
+      <!DOCTYPE html>
+      <html>
+        <body style="margin:0;font-family:Arial, sans-serif;background:linear-gradient(#9de3ff,#c7f4ff);display:grid;place-items:center;height:100vh;">
+          <div style="text-align:center;">
+            <h1 style="font-size:36px;color:#1d4ed8;margin:0;">Bubble Pop World</h1>
+            <div style="margin-top:24px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+              <div style="width:60px;height:60px;border-radius:50%;background:#fff;box-shadow:0 0 18px rgba(37,99,235,0.5);"></div>
+              <div style="width:70px;height:70px;border-radius:50%;background:#bde8ff;box-shadow:0 0 18px rgba(37,99,235,0.5);"></div>
+              <div style="width:50px;height:50px;border-radius:50%;background:#dbeafe;box-shadow:0 0 18px rgba(37,99,235,0.5);"></div>
+            </div>
+            <p style="margin-top:18px;color:#1e3a8a;font-size:18px;">Age 5 website game</p>
+          </div>
+        </body>
+      </html>
+    `
+  },
+  {
+    id: 'color-race',
+    name: 'Color Race',
+    age: 8,
+    type: 'Kids',
+    accent: '#5ac8fa',
+    description: 'Follow the rainbow path and match the right colors.',
+    website: `
+      <!DOCTYPE html>
+      <html>
+        <body style="margin:0;font-family:Arial,sans-serif;background:linear-gradient(#dbeafe,#bfdbfe);height:100vh;display:grid;place-items:center;">
+          <div style="padding:24px;border-radius:24px;background:rgba(255,255,255,0.7);text-align:center;box-shadow:0 20px 40px rgba(59,130,246,0.15);">
+            <h1 style="margin:0;color:#1d4ed8;">Color Race</h1>
+            <div style="margin-top:20px;display:flex;gap:14px;justify-content:center;">
+              <span style="width:38px;height:38px;border-radius:50%;background:#f87171;display:inline-block;"></span>
+              <span style="width:38px;height:38px;border-radius:50%;background:#fbbf24;display:inline-block;"></span>
+              <span style="width:38px;height:38px;border-radius:50%;background:#34d399;display:inline-block;"></span>
+              <span style="width:38px;height:38px;border-radius:50%;background:#60a5fa;display:inline-block;"></span>
+            </div>
+            <p style="margin-top:18px;color:#1e3a8a;font-size:18px;">Age 8 website game</p>
+          </div>
+        </body>
+      </html>
+    `
+  },
+  {
+    id: 'star-jump',
+    name: 'Star Jump Quest',
+    age: 10,
+    type: 'Kids',
+    accent: '#5aa9ff',
+    description: 'Jump to collect stars and dodge tiny blockers.',
+    website: `
+      <!DOCTYPE html>
+      <html>
+        <body style="margin:0;font-family:Arial,sans-serif;background:linear-gradient(#0f172a,#1d4ed8);height:100vh;display:grid;place-items:center;">
+          <div style="width:420px;height:260px;border-radius:24px;background:rgba(255,255,255,0.12);position:relative;overflow:hidden;">
+            <div style="position:absolute;left:30px;bottom:42px;width:36px;height:48px;background:#f8fafc;border-radius:10px;"></div>
+            <div style="position:absolute;left:160px;bottom:30px;width:18px;height:18px;background:#facc15;border-radius:50%;box-shadow:0 0 30px #facc15;"></div>
+            <div style="position:absolute;left:240px;bottom:35px;width:110px;height:32px;background:#fdba74;border-radius:8px;"></div>
+            <div style="position:absolute;left:340px;top:32px;width:12px;height:12px;background:#f8fafc;border-radius:50%;"></div>
+            <div style="position:absolute;left:320px;top:48px;width:12px;height:12px;background:#f8fafc;border-radius:50%;"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:18px;color:#e0f2fe;font-weight:700;font-size:20px;">Star Jump Quest</div>
+          </div>
+        </body>
+      </html>
+    `
+  },
+  {
+    id: 'spark-teen',
+    name: 'Spark Stage',
+    age: 13,
+    type: 'Teen',
+    accent: '#8b5cf6',
+    description: 'Create beats, join mini challenges, and chat with friends.',
+    website: `
+      <!DOCTYPE html>
+      <html>
+        <body style="margin:0;font-family:Arial,sans-serif;background:linear-gradient(#1e1b4b,#312e81);height:100vh;display:grid;place-items:center;">
+          <div style="background:rgba(255,255,255,0.08);padding:32px 28px;border-radius:24px;text-align:center;color:#f5f3ff;box-shadow:0 20px 40px rgba(139,92,246,0.18);">
+            <h1 style="margin:0 0 18px;">Spark Stage</h1>
+            <div style="display:flex;justify-content:center;gap:12px;">
+              <div style="width:18px;height:60px;background:#a78bfa;border-radius:12px;"></div>
+              <div style="width:18px;height:92px;background:#c4b5fd;border-radius:12px;"></div>
+              <div style="width:18px;height:76px;background:#ddd6fe;border-radius:12px;"></div>
+            </div>
+            <p style="margin-top:18px; color:#d8b4fe; font-size:18px;">Age 13 voice-enabled game</p>
+          </div>
+        </body>
+      </html>
+    `
+  },
+  {
+    id: 'pixel-battle',
+    name: 'Pixel Battle Arena',
+    age: 16,
+    type: 'Teen',
+    accent: '#f97316',
+    description: 'Quick strategy rounds and live player rooms.',
+    website: `
+      <!DOCTYPE html>
+      <html>
+        <body style="margin:0;font-family:Arial,sans-serif;background:linear-gradient(#1f2937,#111827);height:100vh;display:grid;place-items:center;">
+          <div style="background:rgba(255,255,255,0.04); width:460px; padding:28px; border-radius:28px; color:#f3f4f6; box-shadow:0 20px 40px rgba(249,115,22,0.2);">
+            <h1 style="margin:0 0 16px;">Pixel Battle Arena</h1>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+              <div style="height:48px;background:#fbbf24;border-radius:12px;"></div>
+              <div style="height:48px;background:#f97316;border-radius:12px;"></div>
+              <div style="height:48px;background:#ef4444;border-radius:12px;"></div>
+            </div>
+            <p style="margin-top:18px;color:#fed7aa; font-size:18px;">Age 16 multiplayer lobby</p>
+          </div>
+        </body>
+      </html>
+    `
+  },
+  {
+    id: 'puzzle-cafe',
+    name: 'Puzzle Cafe 20',
+    age: 20,
+    type: 'Adult',
+    accent: '#f43f5e',
+    description: 'Calm puzzle rooms and social hangouts for adults.',
+    website: `
+      <!DOCTYPE html>
+      <html>
+        <body style="margin:0;font-family:Arial,sans-serif;background:linear-gradient(#1f2937,#111827);height:100vh;display:grid;place-items:center;">
+          <div style="text-align:center;color:#f8fafc;">
+            <div style="display:flex;justify-content:center;gap:18px;">
+              <span style="display:block;width:56px;height:56px;border-radius:14px;background:#fda4af;"></span>
+              <span style="display:block;width:56px;height:56px;border-radius:14px;background:#f9a8d4;"></span>
+              <span style="display:block;width:56px;height:56px;border-radius:14px;background:#fbcfe8;"></span>
+            </div>
+            <h1 style="margin-top:22px;">Puzzle Cafe 20</h1>
+            <p style="color:#fecdd3;font-size:18px;">Age 20 community game</p>
+          </div>
+        </body>
+      </html>
+    `
+  },
+  {
+    id: 'voice-lounge',
+    name: 'Voice Lounge 30',
+    age: 30,
+    type: 'Adult',
+    accent: '#06b6d4',
+    description: 'Relaxed co-op play with voice chat and friendly rooms.',
+    website: `
+      <!DOCTYPE html>
+      <html>
+        <body style="margin:0;font-family:Arial,sans-serif;background:linear-gradient(#0f172a,#134e4a);height:100vh;display:grid;place-items:center;">
+          <div style="padding:30px 34px;border-radius:22px;background:rgba(255,255,255,0.06);color:#ecfeff;">
+            <h1 style="margin:0 0 12px;">Voice Lounge 30</h1>
+            <div style="display:flex;gap:16px;justify-content:center;">
+              <span style="display:block;width:24px;height:58px;border-radius:16px;background:#67e8f9;"></span>
+              <span style="display:block;width:24px;height:78px;border-radius:16px;background:#a5f3fc;"></span>
+              <span style="display:block;width:24px;height:62px;border-radius:16px;background:#cffafe;"></span>
+            </div>
+            <p style="margin-top:18px;color:#a5f3fc; font-size:18px;">Age 30 voice-enabled room</p>
+          </div>
+        </body>
+      </html>
+    `
+  },
+  {
+    id: 'zen-sky',
+    name: 'Zen Sky 50',
+    age: 50,
+    type: 'Adult',
+    accent: '#10b981',
+    description: 'Relaxing strategy and social space for mature players.',
+    website: `
+      <!DOCTYPE html>
+      <html>
+        <body style="margin:0;font-family:Arial,sans-serif;background:linear-gradient(#ecfeff,#bbf7d0);height:100vh;display:grid;place-items:center;">
+          <div style="text-align:center;color:#065f46;">
+            <h1 style="margin:0;">Zen Sky 50</h1>
+            <div style="margin-top:20px;display:flex;justify-content:center;gap:16px;">
+              <span style="display:block;width:16px;height:64px;border-radius:999px;background:#10b981;"></span>
+              <span style="display:block;width:16px;height:86px;border-radius:999px;background:#34d399;"></span>
+              <span style="display:block;width:16px;height:70px;border-radius:999px;background:#6ee7b7;"></span>
+            </div>
+            <p style="margin-top:18px;font-size:18px;">Age 50 calm play website</p>
+          </div>
+        </body>
+      </html>
+    `
+  }
+];
 
 const state = {
-  running: false,
-  gameOver: false,
-  score: 0,
-  best: Number(localStorage.getItem('website-quest-best') || 0),
-  speed: 1,
-  spawnTimer: 0,
-  pickupTimer: 0,
-  lastTime: 0,
-  flash: 0
+  age: Number(localStorage.getItem('ageplay-age') || 10),
+  color: localStorage.getItem('ageplay-color') || '#4ea5ff',
+  selectedGameId: 'star-jump',
+  voiceEnabled: false
 };
 
-const groundY = canvas.height - 60;
-const player = {
-  x: 90,
-  y: groundY - 54,
-  width: 42,
-  height: 54,
-  vy: 0,
-  jumpPower: 16.5,
-  gravity: 0.68,
-  onGround: true,
-  ducking: false
-};
+const ageSlider = document.getElementById('ageSlider');
+const ageValue = document.getElementById('ageValue');
+const modeBadge = document.getElementById('modeBadge');
+const matchLabel = document.getElementById('matchLabel');
+const matchText = document.getElementById('matchText');
+const voiceToggle = document.getElementById('voiceToggle');
+const voiceText = document.getElementById('voiceText');
+const colorPicker = document.getElementById('colorPicker');
+const gamesGrid = document.getElementById('gamesGrid');
+const gameCounter = document.getElementById('gameCounter');
+const previewTitle = document.getElementById('previewTitle');
+const previewAge = document.getElementById('previewAge');
+const gamePreview = document.getElementById('gamePreview');
+const randomGameBtn = document.getElementById('randomGameBtn');
 
-const world = {
-  obstacles: [],
-  pickups: [],
-  particles: []
-};
-
-bestScoreValue.textContent = state.best;
-
-function normalizeUrl(rawValue) {
-  const value = rawValue.trim();
-  if (!value) return 'https://example.com';
-  if (/^https?:\/\//i.test(value)) return value;
-  return `https://${value}`;
+function getAgeBase(age) {
+  if (age <= 12) return 'kids';
+  if (age <= 17) return 'teen';
+  return 'adult';
 }
 
-function updateSiteLabel(hostname) {
-  siteStatus.textContent = `Site: ${hostname}`;
+function isVoiceAllowed(age) {
+  return age >= 13;
 }
 
-function setOverlay(text, visible = true) {
-  siteOverlayText.textContent = text;
-  siteOverlay.classList.toggle('hidden', !visible);
-}
-
-function loadSite() {
-  const url = normalizeUrl(siteUrlInput.value);
-  siteUrlInput.value = url;
-  websiteFrame.src = url;
-  updateSiteLabel(new URL(url).hostname);
-  setOverlay('Loading website...');
-}
-
-function resetPlayer() {
-  player.y = groundY - player.height;
-  player.vy = 0;
-  player.onGround = true;
-  player.ducking = false;
-}
-
-function resetWorld() {
-  world.obstacles = [];
-  world.pickups = [];
-  world.particles = [];
-  state.spawnTimer = 0;
-  state.pickupTimer = 0;
-  state.score = 0;
-  state.speed = 1;
-  state.flash = 0;
-  player.y = groundY - player.height;
-  player.vy = 0;
-}
-
-function startGame() {
-  if (!state.running) {
-    state.running = true;
-    state.gameOver = false;
-    resetWorld();
-    state.lastTime = 0;
-    setOverlay('');
-  }
-}
-
-function endGame() {
-  state.running = false;
-  state.gameOver = true;
-  state.best = Math.max(state.best, Math.floor(state.score));
-  localStorage.setItem('website-quest-best', String(state.best));
-  bestScoreValue.textContent = state.best;
-  setOverlay('Game over — press R to retry', true);
-}
-
-function jump() {
-  if (!state.running) {
-    startGame();
-  }
-
-  if (player.onGround) {
-    player.vy = -player.jumpPower;
-    player.onGround = false;
-  }
-}
-
-function slide() {
-  if (!state.running) return;
-  player.ducking = true;
-}
-
-function stopSlide() {
-  player.ducking = false;
-}
-
-function spawnObstacle() {
-  const typeRoll = Math.random();
-  const width = typeRoll > 0.7 ? 52 : 36;
-  const height = typeRoll > 0.7 ? 80 : 50;
-  const x = canvas.width + 40;
-  const y = groundY - height;
-
-  world.obstacles.push({
-    x,
-    y,
-    width,
-    height,
-    color: typeRoll > 0.7 ? '#fb7185' : '#f97316',
-    type: typeRoll > 0.7 ? 'tall' : 'block'
+function getMatchingGames(age) {
+  return [...games].sort((a, b) => {
+    const aDiff = Math.abs(a.age - age);
+    const bDiff = Math.abs(b.age - age);
+    return aDiff - bDiff;
   });
 }
 
-function spawnPickup() {
-  const x = canvas.width + 50;
-  const y = groundY - (70 + Math.random() * 90);
-  world.pickups.push({
-    x,
-    y,
-    radius: 12,
-    value: 10,
-    spin: Math.random() * Math.PI * 2
-  });
+function savePlayer() {
+  localStorage.setItem('ageplay-age', String(state.age));
+  localStorage.setItem('ageplay-color', state.color);
 }
 
-function update(dt) {
-  if (!state.running) return;
+function applyTheme() {
+  const mode = getAgeBase(state.age);
+  document.body.dataset.mode = mode;
+  const root = document.documentElement;
+  root.style.setProperty('--primary', state.color);
+  root.style.setProperty('--primary-2', mode === 'kids' ? '#6dd2ff' : mode === 'teen' ? '#a78bfa' : '#67e8f9');
+  modeBadge.textContent = mode === 'kids' ? 'Kids mode' : mode === 'teen' ? 'Teen mode' : 'Adult mode';
 
-  const delta = dt * 0.06;
-  state.score += dt * 0.025;
-  state.speed = 1 + state.score / 100;
-  speedValue.textContent = `${state.speed.toFixed(1)}x`;
-  scoreValue.textContent = `${Math.floor(state.score)}`;
-
-  player.vy += player.gravity * delta * 18;
-  player.y += player.vy * delta * 12;
-
-  if (player.y >= groundY - player.height) {
-    player.y = groundY - player.height;
-    player.vy = 0;
-    player.onGround = true;
-  }
-
-  if (player.ducking && player.onGround) {
-    player.height = 38;
+  const voiceAllowed = isVoiceAllowed(state.age);
+  if (voiceAllowed) {
+    voiceText.textContent = state.voiceEnabled ? 'Voice chat: On' : 'Voice chat: Off';
+    voiceToggle.classList.remove('disabled');
+    voiceToggle.disabled = false;
   } else {
-    player.height = 54;
+    voiceText.textContent = 'Locked: 13+';
+    voiceToggle.classList.add('disabled');
+    voiceToggle.disabled = true;
+    state.voiceEnabled = false;
   }
 
-  state.spawnTimer += dt;
-  state.pickupTimer += dt;
+  voiceToggle.textContent = state.voiceEnabled ? 'On' : 'Off';
+  matchLabel.textContent = `Same age friends: ${state.age}`;
+  matchText.textContent =
+    state.age <= 12
+      ? `You can play with other ${state.age}-year-olds and games rated ${state.age}.`
+      : `You can match with players around ${state.age} and games rated ${state.age}.`;
 
-  if (state.spawnTimer > 1200 / state.speed) {
-    spawnObstacle();
-    state.spawnTimer = 0;
-  }
-
-  if (state.pickupTimer > 1500 / state.speed) {
-    spawnPickup();
-    state.pickupTimer = 0;
-  }
-
-  const moveSpeed = 6 * state.speed;
-
-  for (const obstacle of world.obstacles) {
-    obstacle.x -= moveSpeed * delta * 12;
-  }
-
-  for (const pickup of world.pickups) {
-    pickup.x -= moveSpeed * delta * 12;
-    pickup.spin += 0.12;
-  }
-
-  world.obstacles = world.obstacles.filter((obstacle) => obstacle.x + obstacle.width > -20);
-  world.pickups = world.pickups.filter((pickup) => pickup.x + pickup.radius > -20);
-
-  const playerHitBox = {
-    x: player.x + 8,
-    y: player.y + 2,
-    width: player.width - 14,
-    height: player.height - 6
-  };
-
-  for (const obstacle of world.obstacles) {
-    const collides =
-      playerHitBox.x < obstacle.x + obstacle.width &&
-      playerHitBox.x + playerHitBox.width > obstacle.x &&
-      playerHitBox.y < obstacle.y + obstacle.height &&
-      playerHitBox.y + playerHitBox.height > obstacle.y;
-
-    if (collides) {
-      endGame();
-      return;
-    }
-  }
-
-  for (const pickup of world.pickups) {
-    const dx = player.x + player.width / 2 - pickup.x;
-    const dy = player.y + player.height / 2 - pickup.y;
-    const dist = Math.hypot(dx, dy);
-
-    if (dist < pickup.radius + 26) {
-      state.score += pickup.value;
-      pickup.x = -999;
-      state.flash = 1;
-    }
-  }
-
-  world.pickups = world.pickups.filter((pickup) => pickup.x > -1000);
-  state.flash *= 0.92;
+  savePlayer();
 }
 
-function drawBackground() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function renderGames() {
+  const matches = getMatchingGames(state.age);
+  const visible = matches.slice(0, 8);
 
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, '#0f172a');
-  gradient.addColorStop(1, '#111827');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  gamesGrid.innerHTML = visible
+    .map((game) => {
+      const selected = game.id === state.selectedGameId ? 'selected' : '';
+      const highlight = game.age === state.age ? 'Exact age match' : 'Nearby age match';
+      const buttonLabel = game.id === state.selectedGameId ? 'Playing' : 'Play';
+      return `
+        <article class="game-card ${selected}" data-id="${game.id}">
+          <div class="game-card-top">
+            <span class="game-badge" style="background:${game.accent}22;border-color:${game.accent}55;color:${game.accent};">${game.type}</span>
+            <span class="age-chip">${game.age}</span>
+          </div>
+          <div>
+            <h3>${game.name}</h3>
+          </div>
+          <p>${game.description}</p>
+          <div class="game-meta">
+            <span>${highlight}</span>
+            <button class="game-play-btn" data-id="${game.id}" style="background:${game.accent};">${buttonLabel}</button>
+          </div>
+        </article>
+      `;
+    })
+    .join('');
 
-  const glow = ctx.createRadialGradient(canvas.width * 0.75, 120, 20, canvas.width * 0.75, 120, 250);
-  glow.addColorStop(0, 'rgba(34,211,238,0.3)');
-  glow.addColorStop(1, 'rgba(34,211,238,0)');
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  gameCounter.textContent = `${visible.length} games`;
 
-  ctx.fillStyle = 'rgba(148, 163, 184, 0.08)';
-  for (let i = 0; i < 18; i += 1) {
-    const x = (i * 71 + (state.score * 2) % 80) % (canvas.width + 40);
-    const y = 80 + (i % 5) * 36;
-    ctx.fillRect(x, y, 42, 2);
-  }
-}
-
-function drawGround() {
-  ctx.fillStyle = '#0b1120';
-  ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
-
-  ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(0, groundY + 1);
-  ctx.lineTo(canvas.width, groundY + 1);
-  ctx.stroke();
-
-  for (let i = 0; i < canvas.width + 30; i += 24) {
-    ctx.fillStyle = 'rgba(34, 211, 238, 0.08)';
-    ctx.fillRect(i - (state.score * 1.5) % 24, groundY + 14, 14, 4);
-  }
-}
-
-function drawPickup(pickup) {
-  ctx.save();
-  ctx.translate(pickup.x, pickup.y);
-  ctx.rotate(pickup.spin);
-  ctx.fillStyle = '#fcd34d';
-  ctx.beginPath();
-  ctx.arc(0, 0, pickup.radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = '#f59e0b';
-  ctx.beginPath();
-  ctx.arc(0, 0, pickup.radius * 0.55, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawObstacle(obstacle) {
-  ctx.fillStyle = obstacle.color;
-  ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
-  ctx.fillRect(obstacle.x + 6, obstacle.y + 8, obstacle.width - 12, 8);
-}
-
-function drawPlayer() {
-  const x = player.x;
-  const y = player.y;
-  const width = player.width;
-  const height = player.height;
-
-  if (state.flash > 0.02) {
-    ctx.fillStyle = `rgba(255,255,255,${0.2 + state.flash * 0.6})`;
-    ctx.fillRect(x - 8, y - 8, width + 16, height + 16);
-  }
-
-  ctx.fillStyle = '#34d399';
-  ctx.fillRect(x + 8, y + 14, width - 16, height - 14);
-
-  ctx.fillStyle = '#f8fafc';
-  ctx.fillRect(x + 10, y + 4, width - 20, 12);
-
-  ctx.fillStyle = '#0f172a';
-  ctx.fillRect(x + 10, y + 20, 5, 5);
-  ctx.fillRect(x + width - 15, y + 20, 5, 5);
-  ctx.fillRect(x + 12, y + 32, width - 24, 4);
-
-  ctx.fillStyle = '#f8fafc';
-  ctx.fillRect(x + 6, y + 6, 8, 8);
-  ctx.fillRect(x + width - 14, y + 6, 8, 8);
-
-  if (player.onGround) {
-    ctx.fillStyle = '#7dd3fc';
-    ctx.fillRect(x + 6, y + height - 4, 10, 6);
-    ctx.fillRect(x + width - 16, y + height - 4, 10, 6);
-  }
-}
-
-function render() {
-  drawBackground();
-
-  for (const pickup of world.pickups) {
-    drawPickup(pickup);
-  }
-
-  for (const obstacle of world.obstacles) {
-    drawObstacle(obstacle);
-  }
-
-  drawGround();
-  drawPlayer();
-}
-
-function loop(timestamp) {
-  if (!state.lastTime) state.lastTime = timestamp;
-  const dt = timestamp - state.lastTime;
-  state.lastTime = timestamp;
-
-  update(dt);
-  render();
-  requestAnimationFrame(loop);
-}
-
-window.addEventListener('keydown', (event) => {
-  if (event.code === 'Space' || event.code === 'ArrowUp') {
-    event.preventDefault();
-    jump();
-  }
-
-  if (event.code === 'ArrowDown') {
-    event.preventDefault();
-    slide();
-  }
-
-  if (event.key.toLowerCase() === 'r') {
-    state.running = false;
-    state.gameOver = false;
-    startGame();
-  }
-});
-
-window.addEventListener('keyup', (event) => {
-  if (event.code === 'ArrowDown') {
-    player.ducking = false;
-  }
-});
-
-loadSiteBtn.addEventListener('click', loadSite);
-startBtn.addEventListener('click', () => {
-  startGame();
-});
-
-document.querySelectorAll('.preset').forEach((button) => {
-  button.addEventListener('click', () => {
-    siteUrlInput.value = button.dataset.url;
-    loadSite();
+  gamesGrid.querySelectorAll('.game-card').forEach((card) => {
+    card.addEventListener('click', (event) => {
+      const button = event.target.closest('.game-play-btn');
+      const id = button ? button.dataset.id : card.dataset.id;
+      setSelectedGame(id);
+    });
   });
-});
+}
 
-websiteFrame.addEventListener('load', () => {
-  setOverlay('', false);
-});
+function setSelectedGame(id) {
+  const game = games.find((entry) => entry.id === id) || games[0];
+  state.selectedGameId = game.id;
+  previewTitle.textContent = game.name;
+  previewAge.textContent = `Age ${game.age}`;
+  gamePreview.srcdoc = game.website;
+  renderGames();
+}
 
-websiteFrame.addEventListener('error', () => {
-  setOverlay('This site blocks embedding. You can still play the fallback runner scene.', true);
-});
+function handleAgeChange(nextAge) {
+  state.age = Math.max(5, Math.min(50, Number(nextAge)));
+  ageSlider.value = String(state.age);
+  ageValue.textContent = String(state.age);
 
-siteUrlInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    loadSite();
+  const exactMatchGame = games.find((game) => game.age === state.age);
+  if (exactMatchGame) {
+    state.selectedGameId = exactMatchGame.id;
   }
+
+  applyTheme();
+  setSelectedGame(state.selectedGameId);
+}
+
+ageSlider.addEventListener('input', (event) => {
+  handleAgeChange(event.target.value);
 });
 
-resetPlayer();
-render();
-requestAnimationFrame(loop);
+colorPicker.addEventListener('input', (event) => {
+  state.color = event.target.value;
+  applyTheme();
+});
+
+voiceToggle.addEventListener('click', () => {
+  if (!isVoiceAllowed(state.age)) return;
+  state.voiceEnabled = !state.voiceEnabled;
+  applyTheme();
+});
+
+randomGameBtn.addEventListener('click', () => {
+  const pool = games.filter((game) => game.age === state.age || Math.abs(game.age - state.age) <= 2);
+  const picked = pool[Math.floor(Math.random() * pool.length)] || games[0];
+  setSelectedGame(picked.id);
+});
+
+ageSlider.value = String(state.age);
+ageValue.textContent = String(state.age);
+colorPicker.value = state.color;
+applyTheme();
+setSelectedGame(state.selectedGameId);

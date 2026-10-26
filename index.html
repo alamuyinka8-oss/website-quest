@@ -3,79 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Website Quest</title>
+    <title>AgePlay</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
-  <body>
+  <body data-mode="kids">
     <div class="app-shell">
       <header class="topbar">
-        <div class="brand">
-          <span class="brand-mark">WQ</span>
-          <span>Website Quest</span>
+        <div class="brand-wrap">
+          <div class="brand-icon">A</div>
+          <div>
+            <div class="brand-name">AgePlay</div>
+            <div class="brand-subtitle">Play by age</div>
+          </div>
         </div>
-        <div class="status-pill" id="siteStatus">Site: example.com</div>
+        <div class="status-badge" id="modeBadge">Kids mode</div>
       </header>
 
-      <main class="layout">
-        <aside class="controls-panel">
-          <div class="panel-title">Choose a website</div>
-
-          <label class="field" for="siteUrl">
-            <span>Website URL</span>
-            <input id="siteUrl" type="text" value="https://example.com" placeholder="https://example.com" />
-          </label>
-
-          <div class="action-row">
-            <button id="loadSiteBtn" type="button">Load site</button>
-            <button id="startBtn" class="primary" type="button">Start game</button>
-          </div>
-
-          <div class="preset-list" aria-label="Preset websites">
-            <button class="preset" data-url="https://example.com" type="button">Example</button>
-            <button class="preset" data-url="https://news.ycombinator.com" type="button">Hacker News</button>
-            <button class="preset" data-url="https://wikipedia.org" type="button">Wikipedia</button>
-            <button class="preset" data-url="https://www.google.com" type="button">Google</button>
-          </div>
-
-          <p class="helper">
-            Many websites block embedding. If that happens, the game still works with a fallback scene.
-          </p>
-
-          <div class="stats-grid">
-            <div class="stat-box">
-              <span>Score</span>
-              <strong id="score">0</strong>
+      <div class="main-layout">
+        <aside class="sidebar">
+          <section class="panel">
+            <div class="panel-heading">Your age</div>
+            <div class="age-row">
+              <div class="age-number" id="ageValue">10</div>
+              <div class="ring-wrap">
+                <input id="ageSlider" type="range" min="5" max="50" value="10" />
+              </div>
             </div>
-            <div class="stat-box">
-              <span>Best</span>
-              <strong id="bestScore">0</strong>
-            </div>
-            <div class="stat-box">
-              <span>Speed</span>
-              <strong id="speedValue">1.0x</strong>
-            </div>
-          </div>
+          </section>
 
-          <div class="legend">
-            <h3>Controls</h3>
-            <ul>
-              <li>Jump: Space / ↑</li>
-              <li>Slide: ↓</li>
-              <li>Restart: R</li>
-            </ul>
-          </div>
+          <section class="panel">
+            <div class="panel-heading">Theme</div>
+            <label class="field-label" for="colorPicker">Kids blue</label>
+            <input id="colorPicker" type="color" value="#4ea5ff" />
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">Voice chat</div>
+            <div class="toggle-row">
+              <span id="voiceText">Locked: 13+</span>
+              <button id="voiceToggle" class="toggle-btn" type="button">On</button>
+            </div>
+            <p class="tiny-note">Voice chat is available only for ages 13 and up.</p>
+          </section>
+
+          <section class="panel summary-panel">
+            <div class="panel-heading">Match</div>
+            <div class="match-box">
+              <strong id="matchLabel">Same age friends: 10</strong>
+              <span id="matchText">You can play with other 10-year-olds and games rated 10.</span>
+            </div>
+          </section>
         </aside>
 
-        <section class="game-panel">
-          <div class="scene-wrap">
-            <iframe id="websiteFrame" title="Website scene" src="https://example.com"></iframe>
-            <div class="site-overlay" id="siteOverlay">
-              <span id="siteOverlayText">Loading website...</span>
+        <main class="content">
+          <section class="hero">
+            <div>
+              <p class="eyebrow">Safe game portal</p>
+              <h1>Play games and websites made for your age.</h1>
             </div>
-            <canvas id="gameCanvas" width="960" height="500" aria-label="Website Quest game canvas"></canvas>
-          </div>
-        </section>
-      </main>
+            <button id="randomGameBtn" class="primary-btn" type="button">Random game</button>
+          </section>
+
+          <section class="games-panel">
+            <div class="section-header">
+              <h2>Games for your age</h2>
+              <span id="gameCounter">0 games</span>
+            </div>
+            <div class="games-grid" id="gamesGrid"></div>
+          </section>
+
+          <section class="preview-panel">
+            <div class="preview-header">
+              <div>
+                <p class="eyebrow">Selected website game</p>
+                <h2 id="previewTitle">Bubble Pop World</h2>
+              </div>
+              <span class="age-chip" id="previewAge">Age 10</span>
+            </div>
+            <iframe id="gamePreview" title="AgePlay game preview" sandbox="allow-scripts allow-same-origin"></iframe>
+          </section>
+        </main>
+      </div>
     </div>
 
     <script src="./app.js"></script>

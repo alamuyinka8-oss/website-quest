@@ -1,33 +1,33 @@
-# Website Quest
+# AgePlay
 
-A browser game where you can load any website, then run, jump, and dodge obstacles while the site plays as the background scene.
+A kid-friendly and age-matched gaming website where players join games and websites based on their age.
 
-## Features
+## What it does
 
-- Type any site URL and load it into the game screen.
-- Jump over blockers and collect glowing pickups.
-- Press Space or Up to jump, Down to slide, and R to restart.
-- Works with a local static server for easy play.
+- Lets the user choose an age from 5 to 50
+- Matches games and websites to the same age level
+- Uses a blue theme for kids and custom blue colors
+- Keeps voice chat available only for ages 13+
+- Shows age-based game cards and a live preview of the selected game website
 
 ## Run it locally
-
-1. Install Node.js 18 or newer.
-2. From the project folder, run:
 
 ```bash
 npm install
 npm start
 ```
 
-3. Open http://localhost:3000 in your browser.
+Then open http://localhost:3000
 
-## Notes
+## Main files
 
-Some websites block being embedded inside an iframe. When that happens, the game will keep running with a fallback scene while showing a message.
+- `index.html` — age-matched game portal UI
+- `style.css` — kid-friendly and adult-friendly styling
+- `app.js` — game filtering, age logic, theme, and preview handling
+- `server.js` — local Node server
 
-## How it works
+## Safety idea
 
-- `index.html` contains the game UI and the website preview.
-- `style.css` styles the interface and game layout.
-- `app.js` handles the runner physics, obstacles, input, and URL loading.
-- `server.js` serves the static files locally.
+- Kids mode is blue by default and uses simpler games.
+- Voice chat is locked for users under 13.
+- Games and website previews are matched to the player's selected age.
